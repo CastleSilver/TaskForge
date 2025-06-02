@@ -1,4 +1,4 @@
-# 🚀 TaskForge: AI-Powered Issue Tracker
+# 🚀 TaskForge - AI-Powered Issue Tracker
 
 Welcome to **TaskForge**, a smart and developer-friendly issue tracker designed to streamline project management using modern technologies, test-driven development, and AI-enhanced productivity features.
 
@@ -30,27 +30,133 @@ Welcome to **TaskForge**, a smart and developer-friendly issue tracker designed 
 
 ---
 
-## 📌 Project Kanban Roadmap
+## 📘 Backend – Function Definition Document
 
-### 🔹 Phase 1: Setup
+### 🧱 Architecture Overview
 
-* Backend scafford setup
+```
+com.taskforge
+├── domain
+│   ├── model         (Entities, Value Objects)
+│   ├── repository    (Interfaces)
+├── application
+│   ├── service       (Use cases, Business logic)
+├── infrastructure
+│   ├── repository    (JPA/DB implementations)
+├── web
+│   ├── controller    (REST endpoints)
+├── config            (Spring configuration)
+└── common            (Exceptions, DTOs, Utils)
+```
 
-### 🔹 Phase 2: Core Features
+### 🗂️ Modules & Functions
 
-*
+#### 1. **Issue Management**
 
-### 🔹 Phase 3: AI Enhancements
+| Function                                           | Description                             |
+| -------------------------------------------------- | --------------------------------------- |
+| `createIssue(ProjectId, title, description)`       | Create a new issue in a project         |
+| `updateIssue(IssueId, title, description, status)` | Update issue details                    |
+| `assignUser(IssueId, UserId)`                      | Assign a user to an issue               |
+| `changeStatus(IssueId, Status)`                    | Change issue status (TODO, DOING, DONE) |
+| `getIssueById(IssueId)`                            | Fetch issue detail                      |
+| `listIssuesByProject(ProjectId)`                   | List all issues in a project            |
+| `deleteIssue(IssueId)`                             | Soft delete an issue                    |
 
-*
+#### 2. **Comment System**
 
-### 🔹 Phase 4: DevOps & Deployment
+| Function                                     | Description                    |
+| -------------------------------------------- | ------------------------------ |
+| `addComment(IssueId, UserId, content)`       | Add a comment to an issue      |
+| `replyToComment(CommentId, UserId, content)` | Nested comment (thread)        |
+| `listComments(IssueId)`                      | Fetch comments for an issue    |
+| `editComment(CommentId, content)`            | Edit comment content           |
+| `deleteComment(CommentId)`                   | Delete a comment (soft delete) |
 
-*
+#### 3. **Project Management**
 
-### 🔹 Phase 5: Polish & Docs
+| Function                                      | Description                |
+| --------------------------------------------- | -------------------------- |
+| `createProject(name, description)`            | Create a new project       |
+| `getProject(ProjectId)`                       | Fetch project details      |
+| `listProjects(UserId)`                        | List all projects for user |
+| `updateProject(ProjectId, name, description)` | Edit project info          |
+| `deleteProject(ProjectId)`                    | Archive/delete a project   |
 
-*
+#### 4. **User Management**
+
+| Function                        | Description              |
+| ------------------------------- | ------------------------ |
+| `registerUser(email, name)`     | Create new user          |
+| `getUserProfile(UserId)`        | Fetch profile            |
+| `updateUserProfile(UserId, ..)` | Edit user info           |
+| `listAssignedIssues(UserId)`    | View user-specific tasks |
+
+#### 5. **Audit Logging**
+
+| Function                                              | Description                   |
+| ----------------------------------------------------- | ----------------------------- |
+| `logAction(EntityType, EntityId, ActionType, UserId)` | Save every significant action |
+| `getIssueHistory(IssueId)`                            | Get full history of an issue  |
+| `getUserActivity(UserId)`                             | Show recent actions by user   |
+
+#### 6. **Kanban View (Service-Level API)**
+
+| Function                       | Description                       |
+| ------------------------------ | --------------------------------- |
+| `getBoardByProject(ProjectId)` | Get all issues grouped by status  |
+| `moveIssue(IssueId, Status)`   | Change issue status via drag-drop |
+
+#### 7. **AI Assistant** (Pluggable Layer)
+
+| Function                             | Description                          |
+| ------------------------------------ | ------------------------------------ |
+| `suggestTitleAndDescription(prompt)` | AI-generated issue title/description |
+| `summarizeComments(IssueId)`         | Summarize long comment threads       |
+| `suggestPrioritization(ProjectId)`   | Auto-tagging or prioritization       |
+
+#### 8. **Test-Driven Setup**
+
+Every service interface should follow:
+
+* Interface-first design
+* Unit tests with JUnit + Mockito
+* Integration tests via `@SpringBootTest`
+
+**Naming Convention:**
+
+* Tests: `*ServiceTest`, `*ControllerTest`
+* Use `@DisplayName` and nested tests for readability
+
+### 📦 Suggested Package Layout (Java)
+
+```
+src/main/java/com/taskforge
+│
+├── domain
+│   ├── issue (Issue, Status, IssueRepository)
+│   ├── project
+│   ├── comment
+│   ├── audit
+│   └── user
+│
+├── application
+│   ├── issue
+│   │   ├── IssueService
+│   │   └── dto
+│   ├── comment
+│   ├── project
+│   └── ai
+│
+├── infrastructure
+│   └── persistence
+│       ├── JpaIssueRepository
+│       └── entities
+│
+├── web
+│   └── IssueController, ProjectController ...
+└── config
+```
 
 ---
 
